@@ -124,6 +124,9 @@ alias py3=/usr/bin/python3
 alias python=/usr/bin/python3
 alias py2=/usr/bin/python2
 alias python2=/usr/bin/python2
+alias ipy=/usr/bin/ipython3
+alias ipy2=/usr/bin/ipython
+alias ipy3=/usr/bin/ipython3
 
 alias dbc='xdg-open'            # emulate double click
 alias e='nvim'                  # edit file neovim
@@ -223,6 +226,7 @@ changeDesktopBackground ()
     gsettings set org.gnome.desktop.background picture-uri "$loc$file"
 }
 #changeDesktopBackground
+
 
 # }}}
 

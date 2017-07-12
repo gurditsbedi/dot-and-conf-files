@@ -17,6 +17,8 @@ Plug 'Shougo/denite.nvim'
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
 Plug 'sjl/badwolf/'
 Plug 'rust-lang/rust.vim'
+Plug 'johngrib/vim-game-code-break'
+Plug 'heavenshell/vim-pydocstring'
 call plug#end()
 "}}}
 " Colors {{{
@@ -103,6 +105,18 @@ endfunc
 " autocmd {{{
 " Delete Trailing Spaces automatically
 autocmd BufWritePre * %s/\s\+$//e
+" }}}
+" Leader Shortcuts {{{
+let mapleader=","
+nnoremap <leader>ev :vsp $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <leader>l :call ToggleNumber()<CR>
+nnoremap <leader><space> :noh<CR>
+nnoremap <leader>1 :set number!<CR>
+vnoremap <leader>y "+y
+" }}}
+" helpers{{{
+nnoremap Q <nop>
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
