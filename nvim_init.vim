@@ -1,4 +1,4 @@
-" Vim Plug {{{
+" Vim Plug and Plugins {{{
 call plug#begin('~/.local/share/nvim/site/autoload/')
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
@@ -15,10 +15,10 @@ Plug 'zchee/deoplete-jedi'
 Plug 'Rip-Rip/clang_complete', { 'for': ['c', 'cpp'] }
 Plug 'Shougo/denite.nvim'
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
+Plug 'neomake/neomake'
 Plug 'sjl/badwolf/'
 Plug 'rust-lang/rust.vim'
 Plug 'johngrib/vim-game-code-break'
-Plug 'heavenshell/vim-pydocstring'
 call plug#end()
 "}}}
 " Colors {{{
@@ -105,6 +105,8 @@ endfunc
 " autocmd {{{
 " Delete Trailing Spaces automatically
 autocmd BufWritePre * %s/\s\+$//e
+" Neomake execute every buffer save
+autocmd! BufWritePost * Neomake
 " }}}
 " Leader Shortcuts {{{
 let mapleader=","
@@ -118,5 +120,10 @@ vnoremap <leader>y "+y
 " helpers{{{
 nnoremap Q <nop>
 " }}}
+"
+let g:neomake_python_enabled_makers = ['flake8', 'pep8']
+" E501 is line length of 80 characters
+let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501'], }
+let g:neomake_python_pep8_maker = { 'args': ['--ignore=E501'], }
 
 " vim:foldmethod=marker:foldlevel=0
