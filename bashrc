@@ -107,6 +107,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdd='cd ~/Desktop'
+alias cdt='cd /tmp/'
 
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
@@ -143,15 +144,44 @@ alias free='free -m'            # show sizes in MB
 alias more=less
 
 # }}}
-### For using transfer.sh to share files {{{
+# For using transfer.sh to share files {{{
 transfer() { if [ $# -eq 0 ]; then echo "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi
     tmpfile=$( mktemp -t transferXXX ); if tty -s; then basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g'); curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile; else curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile ; fi; cat $tmpfile; rm -f $tmpfile; echo;}
 
+# Examples:
+#     ix hello.txt              # paste file (name/ext will be set).
+#     echo Hello world. | ix    # read from STDIN (won't set name/ext).
+#     ix -n 1 self_destruct.txt # paste will be deleted after one read.
+#     ix -i ID hello.txt        # replace ID, if you have permission.
+#     ix -d ID
+
+ix() {
+    local opts
+    local OPTIND
+    [ -f "$HOME/.netrc" ] && opts='-n'
+    while getopts ":hd:i:n:" x; do
+        case $x in
+            h) echo "ix [-d ID] [-i ID] [-n N] [opts]"; return;;
+            d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+            i) opts="$opts -X PUT"; local id="$OPTARG";;
+            n) opts="$opts -F read:1=$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND - 1))
+    [ -t 0 ] && {
+        local filename="$1"
+        shift
+        [ "$filename" ] && {
+            curl $opts -F f:1=@"$filename" $* ix.io/$id
+            return
+        }
+        echo "^C to cancel, ^D to send."
+    }
+    curl $opts -F f:1='<-' $* ix.io/$id
+}
+
 # }}}
 # git prompt & completion, neovim, fzf {{{
-# for neovim (changing cursor to I-beam when entered in Insert Mode
-export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-
 # for fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
@@ -225,10 +255,11 @@ changeDesktopBackground ()
     file="$(ls --format=single-column $loc | sort --random-sort | head -n1)"
     gsettings set org.gnome.desktop.background picture-uri "$loc$file"
 }
-#changeDesktopBackground
+changeDesktopBackground $HOME/Pictures/pointpapers/
 
 
 # }}}
 
+export PATH=~/.local/bin:$PATH
 
 # vim:foldmethod=marker:foldlevel=0
