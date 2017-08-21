@@ -1,24 +1,35 @@
 " Vim Plug and Plugins {{{
 call plug#begin('~/.local/share/nvim/site/autoload/')
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
+" colorschemes
+Plug 'sjl/badwolf'
+Plug 'tomasr/molokai'
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'morhetz/gruvbox'
+" Plugins
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+
 Plug 'tomtom/tlib_vim'
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'scrooloose/syntastic'
+
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-jedi'
 Plug 'Rip-Rip/clang_complete', { 'for': ['c', 'cpp'] }
+
 Plug 'Shougo/denite.nvim'
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
 Plug 'neomake/neomake'
-Plug 'sjl/badwolf/'
 Plug 'rust-lang/rust.vim'
-Plug 'johngrib/vim-game-code-break'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 "}}}
 " Colors {{{
@@ -117,13 +128,35 @@ nnoremap <leader><space> :noh<CR>
 nnoremap <leader>1 :set number!<CR>
 vnoremap <leader>y "+y
 " }}}
-" helpers{{{
-nnoremap Q <nop>
-" }}}
-"
+" neomake{{{
 let g:neomake_python_enabled_makers = ['flake8', 'pep8']
 " E501 is line length of 80 characters
 let g:neomake_python_flake8_maker = { 'args': ['--ignore=E501'], }
 let g:neomake_python_pep8_maker = { 'args': ['--ignore=E501'], }
+" }}}
+" fzf mappings {{{
+nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+nnoremap <silent> <Leader>C        :Colors<CR>
+nnoremap <silent> <Leader><Enter>  :Buffers<CR>
+nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
+nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
+xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
+nnoremap <silent> <Leader>`        :Marks<CR>
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+" }}}
+" helpers{{{
+nnoremap Q <nop>
+" }}}
+
 
 " vim:foldmethod=marker:foldlevel=0
